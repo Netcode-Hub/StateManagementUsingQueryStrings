@@ -1,0 +1,23 @@
+﻿@page "/fetchdata"
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager NavManager
+<div class="container">
+    <div class="row">
+        <div class="card">
+            <div class="card-header">Product Count: @ProductCount </div>
+        </div>
+    </div>
+
+</div>
+
+@code{
+    public int ProductCount { get; set; }
+    protected override void OnInitialized()
+    {
+        var queryString = QueryHelpers.ParseQuery(NavManager.ToAbsoluteUri(NavManager.Uri).Query);
+        if (queryString.TryGetValue("ProductCount", out var productCount))
+        {
+            ProductCount = int.Parse(productCount!);
+        }
+    }
+}

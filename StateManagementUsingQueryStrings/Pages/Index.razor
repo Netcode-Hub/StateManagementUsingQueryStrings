@@ -1,0 +1,72 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager NavManager
+<div class="container">
+    <div class="row">
+        <div class="card">
+            <div class="card-header">Product Count: @ProductCount </div>
+            <div class="card-body" style="max-height:50vh; overflow-y:scroll;">
+                @if (Products.Count > 0)
+                {
+                    foreach (var item in Products)
+                    {
+                        <div class="col-auto m-2">
+                            <div class="card">
+                                <div class="card-header">@item.Name</div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+    </div>
+    <div class="row col-auto card mt-5">
+        <div class="form-group">
+            <label class="form-label"> Name</label>
+            <InputText @bind-Value="Product.Name"></InputText>
+            <button class="mt-2 btn btn-primary" @onclick="AddProduct">Add Product</button>
+        </div>
+    </div>
+
+</div>
+<button class="btn btn-primary" @onclick="Send">Send Product count : @ProductCount to Fetch Data Page</button>
+@code {
+    public Product Product { get; set; } = new();
+    public int ProductCount { get; set; }
+    public List<Product> Products { get; set; }
+
+    private void AddProduct()
+    {
+        Product.Id = ProductCount++;
+        Products.Add(Product);
+        Product = new();
+    }
+
+    private void Send()
+    {
+        Dictionary<string, string> NavParameter = new Dictionary<string, string>() { { "ProductCount", ProductCount.ToString() } };
+        NavManager.NavigateTo(QueryHelpers.AddQueryString("fetchdata", NavParameter!));
+    }
+
+
+    protected override void OnInitialized()
+    {
+        Products = new(){
+        new Product() { Id = 1, Name = "Television " },
+        new Product() { Id = 2, Name = "Mobile " },
+        new Product() { Id = 3, Name = "Desktop " },
+        new Product() { Id = 4, Name = "Laptop " },
+        new Product() { Id = 5, Name = "Refrigerator " },
+        new Product() { Id = 6, Name = "Computer " },
+        new Product() { Id = 7, Name = "Keyboard " },
+        new Product() { Id = 8, Name = "Mouse " },
+        new Product() { Id = 9, Name = "Monitor " },
+        new Product() { Id = 10, Name = "Microphone " },
+        new Product() { Id = 11, Name = "Speaker " }
+        };
+        ProductCount = Products.Count();
+    }
+
+}
+
